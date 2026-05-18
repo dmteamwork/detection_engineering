@@ -2,102 +2,112 @@ import tomllib
 import os
 import json
 
-# =========================
-# 🔥 ATT&CK MAPPING LAYER
-# =========================
-# You MUST edit this based on your real detections
-
-ATTACK_MAP = {
-    # example mappings (replace with yours)
-    "powershell_exec": "T1059",
-    "bruteforce_login": "T1110",
-    "remote_execution": "T1021",
-    "c2_traffic": "T1071",
-    "credential_dumping": "T1003",
-    "file_discovery": "T1083",
-    "process_injection": "T1055",
-    "phishing": "T1566",
-    "file_transfer": "T1105"
-}
-
-# Map ATT&CK technique → tactic (ATT&CK v19 compatible)
-TACTIC_MAP = {
-    "T1059": "execution",
-    "T1110": "credential-access",
-    "T1021": "lateral-movement",
-    "T1071": "command-and-control",
-    "T1003": "credential-access",
-    "T1083": "discovery",
-    "T1055": "defense-evasion",
-    "T1566": "initial-access",
-    "T1105": "command-and-control"
-}
-
-# =========================
-# 🔍 LOAD + AGGREGATE
-# =========================
 techniques = {}
 
+# Walk through all TOML detection rules
 for root, dirs, files in os.walk("detections/"):
+
     for file in files:
+
         if not file.endswith(".toml"):
             continue
 
         full_path = os.path.join(root, file)
 
-        with open(full_path, "rb") as f:
-            alert = tomllib.load(f)
+        try:
+            with open(full_path, "rb") as f:
+                alert = tomllib.load(f)
 
-        threats = alert.get("rule", {}).get("threat", [])
+            # Ensure rule exists
+            if "rule" not in alert:
+                print(f"[!] Missing [rule] section: {full_path}")
+                continue
 
-        for threat in threats:
-            tactic = threat.get("tactic", {}).get("name", "none").lower()
+            rule = alert["rule"]
 
-            for tech in threat.get("technique", []):
-                tech_id = tech.get("id")
+            # Skip rules without MITRE ATT&CK mappings
+            if "threat" not in rule:
+                print(f"[!] No threat mapping: {full_path}")
+                continue
 
-                if not tech_id:
+            # Iterate through all threats
+            for threat in rule["threat"]:
+
+                tactic = threat.get("tactic", {}).get("name", "unknown")
+
+                # Skip malformed threat entries
+                if "technique" not in threat:
                     continue
 
-                # main technique
-                techniques[tech_id] = techniques.get(tech_id, {
-                    "techniqueID": tech_id,
-                    "tactic": tactic,
-                    "score": 0
-                })
-                techniques[tech_id]["score"] += 1
+                # Iterate through techniques
+                for technique in threat["technique"]:
 
-                # subtechniques (IMPORTANT FIX)
-                for sub in tech.get("subtechnique", []):
-                    sub_id = sub.get("id")
+                    technique_id = technique.get("id")
 
-                    if not sub_id:
+                    if not technique_id:
                         continue
 
-                    techniques[sub_id] = techniques.get(sub_id, {
-                        "techniqueID": sub_id,
-                        "tactic": tactic,
-                        "score": 0
-                    })
-                    techniques[sub_id]["score"] += 1
-# =========================
-# 📊 BUILD NAVIGATOR JSON
-# =========================
-layer = {
+                    # Add / increment parent technique
+                    if technique_id not in techniques:
+                        techniques[technique_id] = {
+                            "techniqueID": technique_id,
+                            "tactic": tactic.lower(),
+                            "score": 1,
+                            "color": "",
+                            "comment": "",
+                            "enabled": True,
+                            "metadata": [],
+                            "links": [],
+                            "showSubtechniques": True
+                        }
+                    else:
+                        techniques[technique_id]["score"] += 1
+
+                    # Handle subtechniques if present
+                    if "subtechnique" in technique:
+
+                        for sub in technique["subtechnique"]:
+
+                            sub_id = sub.get("id")
+
+                            if not sub_id:
+                                continue
+
+                            if sub_id not in techniques:
+                                techniques[sub_id] = {
+                                    "techniqueID": sub_id,
+                                    "tactic": tactic.lower(),
+                                    "score": 1,
+                                    "color": "",
+                                    "comment": "",
+                                    "enabled": True,
+                                    "metadata": [],
+                                    "links": [],
+                                    "showSubtechniques": False
+                                }
+                            else:
+                                techniques[sub_id]["score"] += 1
+
+        except Exception as e:
+            print(f"[!] Error processing {full_path}: {e}")
+
+# Build ATT&CK Navigator layer
+navigator = {
     "name": "Custom Detections",
     "versions": {
-        "attack": "19",
+        "attack": "13",
         "navigator": "4.8.2",
         "layer": "4.4"
     },
     "domain": "enterprise-attack",
-    "description": "Auto-generated ATT&CK layer from detection-as-code pipeline",
+    "description": "",
     "filters": {
         "platforms": [
             "Linux",
             "macOS",
             "Windows",
             "Network",
+            "PRE",
             "Containers",
             "Office 365",
             "SaaS",
@@ -135,14 +145,14 @@ layer = {
     "selectSubtechniquesWithParent": False
 }
 
-# =========================
-# 💾 WRITE OUTPUT
-# =========================
+# Ensure output directory exists
+os.makedirs("metrics", exist_ok=True)
+
+# Write navigator layer
 output_path = "metrics/navigator.json"
-os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
 with open(output_path, "w") as f:
-    json.dump(layer, f, indent=4)
+    json.dump(navigator, f, indent=4)
 
-print(f"[+] Navigator layer generated: {output_path}")
-print(f"[+] Techniques mapped: {len(techniques)}")
+print(f"[+] Navigator layer written to: {output_path}")
+print(f"[+] Total techniques/subtechniques: {len(techniques)}")
