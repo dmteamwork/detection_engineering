@@ -26,6 +26,5 @@ jobs:
       - run: python development/add_rule_ids.py
       - run: python development/validation.py
       - run: python development/mitre.py
-      - run: python development/toml-to-json.py
 
       
