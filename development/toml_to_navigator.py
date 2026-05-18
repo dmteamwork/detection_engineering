@@ -155,8 +155,5 @@ with open(output_path, "w") as f:
     json.dump(navigator, f, indent=4)
 
 print(f"[+] Navigator layer written to: {output_path}")
-<<<<<<< HEAD
 print(f"[+] Total techniques/subtechniques: {len(techniques)}")
-=======
 print(f"[+] Total techniques/subtechniques: {len(techniques)}")
->>>>>>> 66a243d17f4777a3658c11e0a1ba60e07efa1584

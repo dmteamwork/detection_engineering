@@ -3,7 +3,7 @@ import uuid
 import tomllib
 import tomli_w # pip install tomli-w
 
-detection_dir = "/home/kali/Desktop/AttackS/vs_code_toml_elastic/detection_engineering"
+detection_dir = "detections/"
 
 for root, dirs, files in os.walk(detection_dir):
     for file in files:

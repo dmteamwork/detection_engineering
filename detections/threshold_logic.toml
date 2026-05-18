@@ -1,6 +1,5 @@
 [rule]
 id = "dd804e46-907a-4a27-a1e3-44bea4a9fb89"
-rule_id = "0c4beb1a-e393-4605-a923-cbb7bc9d4298"
 name = "threshold logic"
 description = "trigger when there is more than 50 q"
 enabled = false

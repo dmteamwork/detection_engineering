@@ -1,5 +1,4 @@
 [rule]
-id = "1c7bba46-7fa8-4e64-8b12"
 name = "test"
 enabled = false
 type = "query"
