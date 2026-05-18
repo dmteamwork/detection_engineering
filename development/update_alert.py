@@ -14,7 +14,7 @@ headers = {
 
 RULES_URL = f"{BASE_URL}/api/detection_engine/rules"
 
-# ✅ Get changed files from GitHub Actions
+
 changed_files = os.environ.get("CHANGED_FILES", "")
 print("CHANGED_FILES:", changed_files)
 
@@ -24,7 +24,7 @@ def build_payload(rule: dict) -> dict | None:
 
     raw_index = rule.get("index", {})
 
-# Handle [rule.index] with nested "indices" key
+
     if isinstance(raw_index, dict):
         raw_index = raw_index.get("indices", [])
 
@@ -70,7 +70,7 @@ def build_payload(rule: dict) -> dict | None:
             "threshold": rule.get("threshold", {"field": [], "value": 1}),
         })
     else:
-        print(f"  ⚠️  Unsupported rule type '{rule_type}' — skipping")
+        print(f"   Unsupported rule type '{rule_type}' — skipping")
         return None
 
     return base
@@ -80,10 +80,10 @@ def push_rule(payload: dict, filename: str):
     rule_id = payload.get("rule_id")
 
     if not rule_id:
-        print(f"  ❌ No rule_id found in {filename} — skipping")
+        print(f"   No rule_id found in {filename} — skipping")
         return
 
-    # ✅ FIXED: pass rule_id as query param
+   
     put_url = f"{RULES_URL}?rule_id={rule_id}"
     put_res = requests.put(put_url, headers=headers, json=payload)
 
@@ -98,13 +98,13 @@ def push_rule(payload: dict, filename: str):
         action = "UPDATED"
 
     if status in (200, 201):
-        print(f"  ✅ {action} [{payload['type']}] {filename} → {status}")
+        print(f"   {action} [{payload['type']}] {filename} → {status}")
     else:
-        print(f"  ❌ FAILED {filename} → {status}")
+        print(f"   FAILED {filename} → {status}")
         print(f"     {json.dumps(body, indent=2)}")
 
 
-# ── Main ──────────────────────────────────────────────────────────────────────
+#  Main 
 detection_dir = "detections/"
 
 for root, dirs, files in os.walk(detection_dir):
@@ -114,7 +114,7 @@ for root, dirs, files in os.walk(detection_dir):
 
         full_path = os.path.join(root, file)
 
-        # ✅ Skip files that were not changed
+        
         if file not in changed_files and full_path not in changed_files:
             continue
 
