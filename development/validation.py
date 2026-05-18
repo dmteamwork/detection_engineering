@@ -5,9 +5,9 @@ import os
 failure = 0
 
 REQUIRED_BY_TYPE = {
-    "query":     ['description', 'name', 'risk_score', 'severity', 'type', 'query'],
-    "eql":       ['description', 'name', 'risk_score', 'severity', 'type', 'query'],
-    "threshold": ['description', 'name', 'risk_score', 'severity', 'type', 'query', 'threshold'],
+    "query":     ['description', 'name', 'risk_score', 'severity', 'type', 'query','rule_id'],
+    "eql":       ['description', 'name', 'risk_score', 'severity', 'type', 'query','rule_id'],
+    "threshold": ['description', 'name', 'risk_score', 'severity', 'type', 'query', 'threshold','rule_id'],
 }
 
 for root, dirs, files in os.walk("/home/kali/Desktop/AttackS/vs_code_toml_elastic"):
