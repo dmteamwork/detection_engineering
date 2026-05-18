@@ -35,5 +35,6 @@ jobs:
           CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
         run: |
           pip install requests
+          pip inatall tomal-w
           python development/add_rule_ids.py
           python development/update_alert.py
