@@ -1,111 +1,10 @@
-
-# """"Try the empty actions approach first to confirm the rest of the payload works correctly."""
-# import requests
-# import json
-
-# url = "https://my-deployment-596fe6.kb.europe-west1.gcp.cloud.es.io/api/alerting/rule/"
-# api_key = "NHF5UkNwNEJTX3RNbGFPTFc1dEs6aDdmMnpmNUFzNXZWMUlUWEEzdG1jUQ=="
-
-# headers = {
-#     "Authorization": f"ApiKey {api_key}",
-#     "kbn-xsrf": "true",
-#     "Content-Type": "application/json;charset=UTF-8"
-# }
-
-# payload = {
-#     "params": {
-#         "aggType": "avg",
-#         "termSize": 6,
-#         "thresholdComparator": ">",
-#         "timeWindowSize": 5,
-#         "timeWindowUnit": "m",
-#         "groupBy": "top",
-#         "threshold": [1000],
-#         "index": [".test-index"],
-#         "timeField": "@timestamp",
-#         "aggField": "sheet.version",
-#         "termField": "name.keyword"
-#     },
-#     "consumer": "alerts",
-#     "rule_type_id": ".index-threshold",
-#     "schedule": {
-#         "interval": "1m"
-#     },
-#     "actions": [],          # empty — no connector needed
-#     "tags": ["cpu"],
-#     "notify_when": "onActionGroupChange",
-#     "name": "my alert"
-# }
-
-# response = requests.post(url, headers=headers, json=payload)
-
-# print(f"Status Code: {response.status_code}")
-# print(f"Response: {json.dumps(response.json(), indent=2)}")
-
-
-
-
-"""working but all as threshold"""
-# import requests
-# import os
-# import tomllib
-# import json
-
-# url = "https://my-deployment-596fe6.kb.europe-west1.gcp.cloud.es.io/api/alerting/rule"
-# api_key = "NHF5UkNwNEJTX3RNbGFPTFc1dEs6aDdmMnpmNUFzNXZWMUlUWEEzdG1jUQ=="
-
-# headers = {
-#     "Authorization": f"ApiKey {api_key}",
-#     "kbn-xsrf": "true",
-#     "Content-Type": "application/json;charset=UTF-8"
-# }
-
-# for root, dirs, files in os.walk("/home/kali/Desktop/AttackS/toml/converted_detection"):
-#     for file in files:
-#         if file.endswith(".toml"):
-#             full_path = os.path.join(root, file)
-#             with open(full_path, "rb") as f:
-#                 alert = tomllib.load(f)
-
-#             rule = alert["rule"]
-#             payload = {
-#                 "name":        rule["name"],
-#                 "consumer":    "alerts",
-#                 "rule_type_id": ".index-threshold",
-#                 "schedule":    {"interval": "1m"},
-#                 "actions":     [],
-#                 "tags":        rule.get("tags", []),
-#                 "params": {
-#                     "index":     [".test-index"],
-#                     "timeField": "@timestamp",
-#                     "aggType":   "count",
-#                     "threshold": [rule.get("risk_score", 50)],
-#                     "thresholdComparator": ">",
-#                     "timeWindowSize": 5,
-#                     "timeWindowUnit": "m",
-#                     "groupBy":   "all"
-#                 }
-#             }
-
-#             # Try UPDATE first, then CREATE if not found
-#             put_response = requests.put(
-#                 f"{url}", headers=headers, json=payload
-#             )
-
-#             if put_response.status_code == 404:
-#                 post_response = requests.post(url, headers=headers, json=payload)
-#                 print(f"CREATED {file}: {post_response.status_code}")
-#             else:
-#                 print(f"UPDATED {file}: {put_response.status_code}")
-
-
 import requests
 import os
 import tomllib
 import json
 
 BASE_URL = "https://my-deployment-596fe6.kb.europe-west1.gcp.cloud.es.io/api/detection_engine/rules"
-api_key = "NHF5UkNwNEJTX3RNbGFPTFc1dEs6aDdmMnpmNUFzNXZWMUlUWEEzdG1jUQ=="
+api_key =  os.environ['ELASTIC_KEY']
 headers = {
     "Authorization": f"ApiKey {api_key}",
     "kbn-xsrf": "true",
@@ -154,7 +53,7 @@ def build_payload(rule: dict) -> dict | None:
         })
 
     else:
-        print(f"  ⚠️  Unsupported rule type '{rule_type}' — skipping")
+        print(f"   Unsupported rule type '{rule_type}' — skipping")
         return None
 
     return base
@@ -166,13 +65,13 @@ def push_rule(payload: dict, filename: str):
     body     = post_res.json()
 
     if status in (200, 201):
-        print(f"  ✅ CREATED [{payload['type']}] {filename} → {status}")
+        print(f"   CREATED [{payload['type']}] {filename} → {status}")
     else:
-        print(f"  ❌ FAILED {filename} → {status}")
+        print(f"   FAILED {filename} → {status}")
         print(f"     {json.dumps(body, indent=2)}")
 
 
-# ── Main ──────────────────────────────────────────────────────────────────────
+#  Main 
 detection_dir = "/home/kali/Desktop/AttackS/vs_code_toml_elastic/detection_engineering/detections"
 
 for root, dirs, files in os.walk(detection_dir):

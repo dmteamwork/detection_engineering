@@ -3,9 +3,8 @@ import tomllib
 import os
 import sys
 
-# =========================
 #  LOAD MITRE DATA
-# =========================
+
 url = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json"
 mitreData = requests.get(url).json()
 
@@ -35,9 +34,7 @@ for obj in mitreData["objects"]:
                 "deprecated": obj.get("x_mitre_deprecated", False)
             }
 
-# =========================
 #  LOAD DETECTIONS
-# =========================
 alert_data = {}
 
 for root, dirs, files in os.walk("detections/"):
@@ -80,9 +77,7 @@ for root, dirs, files in os.walk("detections/"):
 
         alert_data[file] = filtered_object_array
 
-# =========================
 #  VALIDATION
-# =========================
 mitre_tactic_list = [
     "reconnaissance", "resource development", "initial access",
     "execution", "persistence", "privilege escalation",
@@ -134,8 +129,6 @@ for file, lines in alert_data.items():
             print(f"[!] Deprecated technique {technique_id} in {file}")
             failure = 1
 
-# =========================
 # EXIT STATUS
-# =========================
 if failure:
     sys.exit(1)

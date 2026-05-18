@@ -1,18 +1,19 @@
 {
     "name": "Custom Detections",
     "versions": {
-        "attack": "19",
+        "attack": "13",
         "navigator": "4.8.2",
         "layer": "4.4"
     },
     "domain": "enterprise-attack",
-    "description": "Auto-generated ATT&CK layer from detection-as-code pipeline",
+    "description": "",
     "filters": {
         "platforms": [
             "Linux",
             "macOS",
             "Windows",
             "Network",
+            "PRE",
             "Containers",
             "Office 365",
             "SaaS",
@@ -33,59 +34,136 @@
     "hideDisabled": false,
     "techniques": [
         {
-            "techniqueID": "T1046",
-            "tactic": "discovery",
-            "score": 2
-        },
-        {
-            "techniqueID": "T1082",
-            "tactic": "discovery",
-            "score": 1
-        },
-        {
-            "techniqueID": "T1217",
-            "tactic": "discovery",
-            "score": 1
-        },
-        {
             "techniqueID": "T1059",
             "tactic": "execution",
-            "score": 4
+            "score": 4,
+            "color": "",
+            "comment": "",
+            "enabled": true,
+            "metadata": [],
+            "links": [],
+            "showSubtechniques": true
         },
         {
             "techniqueID": "T1059.001",
             "tactic": "execution",
-            "score": 3
-        },
-        {
-            "techniqueID": "T1059.003",
-            "tactic": "execution",
-            "score": 1
-        },
-        {
-            "techniqueID": "T1547",
-            "tactic": "persistence",
-            "score": 1
-        },
-        {
-            "techniqueID": "T1547.001",
-            "tactic": "persistence",
-            "score": 1
-        },
-        {
-            "techniqueID": "T1074",
-            "tactic": "collection",
-            "score": 1
-        },
-        {
-            "techniqueID": "T1074.001",
-            "tactic": "collection",
-            "score": 1
+            "score": 3,
+            "color": "",
+            "comment": "",
+            "enabled": true,
+            "metadata": [],
+            "links": [],
+            "showSubtechniques": false
         },
         {
             "techniqueID": "T1020",
             "tactic": "exfiltration",
-            "score": 1
+            "score": 1,
+            "color": "",
+            "comment": "",
+            "enabled": true,
+            "metadata": [],
+            "links": [],
+            "showSubtechniques": true
+        },
+        {
+            "techniqueID": "T1059.003",
+            "tactic": "execution",
+            "score": 1,
+            "color": "",
+            "comment": "",
+            "enabled": true,
+            "metadata": [],
+            "links": [],
+            "showSubtechniques": false
+        },
+        {
+            "techniqueID": "T1059.006",
+            "tactic": "execution",
+            "score": 1,
+            "color": "",
+            "comment": "",
+            "enabled": true,
+            "metadata": [],
+            "links": [],
+            "showSubtechniques": true
+        },
+        {
+            "techniqueID": "T1082",
+            "tactic": "discovery",
+            "score": 1,
+            "color": "",
+            "comment": "",
+            "enabled": true,
+            "metadata": [],
+            "links": [],
+            "showSubtechniques": true
+        },
+        {
+            "techniqueID": "T1217",
+            "tactic": "discovery",
+            "score": 1,
+            "color": "",
+            "comment": "",
+            "enabled": true,
+            "metadata": [],
+            "links": [],
+            "showSubtechniques": true
+        },
+        {
+            "techniqueID": "T1046",
+            "tactic": "discovery",
+            "score": 2,
+            "color": "",
+            "comment": "",
+            "enabled": true,
+            "metadata": [],
+            "links": [],
+            "showSubtechniques": true
+        },
+        {
+            "techniqueID": "T1547",
+            "tactic": "persistence",
+            "score": 1,
+            "color": "",
+            "comment": "",
+            "enabled": true,
+            "metadata": [],
+            "links": [],
+            "showSubtechniques": true
+        },
+        {
+            "techniqueID": "T1547.001",
+            "tactic": "persistence",
+            "score": 1,
+            "color": "",
+            "comment": "",
+            "enabled": true,
+            "metadata": [],
+            "links": [],
+            "showSubtechniques": false
+        },
+        {
+            "techniqueID": "T1074",
+            "tactic": "collection",
+            "score": 1,
+            "color": "",
+            "comment": "",
+            "enabled": true,
+            "metadata": [],
+            "links": [],
+            "showSubtechniques": true
+        },
+        {
+            "techniqueID": "T1074.001",
+            "tactic": "collection",
+            "score": 1,
+            "color": "",
+            "comment": "",
+            "enabled": true,
+            "metadata": [],
+            "links": [],
+            "showSubtechniques": false
         }
     ],
     "gradient": {
