@@ -37,7 +37,7 @@ for obj in mitreData["objects"]:
 #  LOAD DETECTIONS
 alert_data = {}
 
-for root, dirs, files in os.walk("detections/"):
+for root, dirs, files in os.walk("detection_engineering/detections"):
     for file in files:
         if not file.endswith(".toml"):
             continue

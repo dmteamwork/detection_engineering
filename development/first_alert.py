@@ -72,7 +72,7 @@ def push_rule(payload: dict, filename: str):
 
 
 #  Main 
-detection_dir = "detections/"
+detection_dir = "detection_engineering/detections"
 
 for root, dirs, files in os.walk(detection_dir):
     for file in files:

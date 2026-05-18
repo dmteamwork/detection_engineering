@@ -5,7 +5,7 @@ import json
 techniques = {}
 
 # Walk through all TOML detection rules
-for root, dirs, files in os.walk("detections/"):
+for root, dirs, files in os.walk("detection_engineering/detections"):
 
     for file in files:
 
