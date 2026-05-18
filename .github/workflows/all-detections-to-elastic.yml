@@ -11,11 +11,12 @@ on:
 jobs:
   elastic-detections-all:
   if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    runs-on: ubuntu-latest
-    env: 
+
+  runs-on: ubuntu-latest
+  env: 
       ELASTIC_KEY: ${{ secrets.ELASTIC_KEY }}
 
-    steps:
+  steps:
       - uses: actions/checkout@v6
       - run: pip install requests
       - run: python development/toml-to-json.py
